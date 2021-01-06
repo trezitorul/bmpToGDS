@@ -44,7 +44,7 @@ gdspy.write_gds("Butterfly.gds")
 ```
 The output butterfly as seen in the GDS viewer looks as follows: 
 
-![alt tag](Demo/Butterfly_GDS.png =100x)
+![alt tag](Demo/Butterfly_GDS.png)
 
 For more details on using gdspy on this see the gdspy documentation: https://github.com/heitzmann/gdspy
 
