@@ -16,9 +16,6 @@ bmpToGDS uses numpy, PIL, and gdspy
 
 ### Basic Usage
 
-
-## Basic Usage
-
 This demo converts the following bmp into a gds layout.
 
 ![alt tag](Demo/Butterfly.bmp)
