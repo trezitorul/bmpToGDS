@@ -3,5 +3,5 @@ __pycache__/
 bmpToGDS.egg-info/
 build/
 *.pyc
-*.ipynb
 bmpToGDS/__pycache__
+Demo/.ipynb_checkpoints/
