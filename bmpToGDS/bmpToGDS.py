@@ -1,3 +1,12 @@
+"""THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, 
+INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR 
+PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE 
+FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR 
+OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER 
+DEALINGS IN THE SOFTWARE.
+Author: Trezitorul
+Copyright 2021
+"""
 from PIL import Image
 import numpy as np 
 import gdspy
@@ -18,10 +27,8 @@ def bmpToGDS(bmp, width, height, layer, datatype, black=0):
     origIm=Image.open(bmp)
     origArr=np.asarray(origIm.convert("L")).copy()
     bwArr=BWConverter(origArr,black=black)
-    print(len(bwArr[bwArr==0]))
     gdsPoly=bwToGDS(width, height, bwArr, layer, datatype)
     return gdsPoly
-    #return origArr
 
 def BWConverter(ImArr,black=0):
     """
@@ -32,10 +39,8 @@ def BWConverter(ImArr,black=0):
         bw: A numpy array representation of the image, can be converted back to a BMP will Image.fromArray(bw)
     """
     bw=ImArr.copy()
-    print(len(bw[bw==black]))
     bw[bw!=black]=255
     bw[bw==black]=0
-
     return bw
 
 def bwToGDS(Width, Height, bwArray, layer, datatype):
@@ -48,9 +53,9 @@ def bwToGDS(Width, Height, bwArray, layer, datatype):
         layer: Layer the BMP should be placed on in the GDS Layout
         datatype: The datatype of the bmp when placed in the GDS Layout
     Returns:
-        A GDSPY polygon
+        A GDSPY polygonset
     """
-    black=0
+    black=0 #We assume that the material is already converted to a black only version.
     YRes=len(bwArray)
     XRes=len(bwArray[0])
     pX=Width/XRes
@@ -58,20 +63,26 @@ def bwToGDS(Width, Height, bwArray, layer, datatype):
     rects=[]
     for i in range(len(bwArray)):
         for j in range(len(bwArray[0])):
-            #print(bwArray[i][j])
             if bwArray[i][j]==black:
-               # print("Adding Rect")
-                #print((pX*i, pY*j))
                 rects.append(gdspy.Rectangle((pX*j,-pY*i),(pX*(j+1), -pY*(i+1)), layer, datatype))
 
     patt=None
     try:
         patt=gdspy.boolean(rects[0], rects[1:], "or", max_points=0)
+        print("Polygonset Successfully Generated")
     except:
+        print("Polygonset is Empty! Check black value and try again")
         None
     return patt
 
 def getBMPVals(ImArr):
+    #Utility for reading unique values in a bmp array, useful for identifying black color if image is not BW.
+    """
+    Args:
+        ImArr: Numpy Array holding the bmp image
+    Returns:
+        List with unique values found in the bmp
+    """
     uniqueVals=[]
     for i in range(len(ImArr)):
         for j in range(len(ImArr[0])):

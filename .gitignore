@@ -1,0 +1,7 @@
+dist/
+__pycache__/
+bmpToGDS.egg-info/
+build/
+*.pyc
+*.ipynb
+bmpToGDS/__pycache__
